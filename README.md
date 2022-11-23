@@ -1,2 +1,2 @@
 # Python-Checkers-AI
-A checkers AI using the minimax algorithm.
+A fork from "Python-Checkers-AI" as a project for GAME THEORY course.
