@@ -1,7 +1,8 @@
 import pygame
 
-WIDTH, HEIGHT = 800, 800
-ROWS, COLS = 8, 8
+M, N = 2, 3 # parameter: M, N. The number of pieces is 2*(M-1)*N
+ROWS, COLS = 2 * M, 2 * N
+WIDTH, HEIGHT = 600//ROWS*COLS, 600
 SQUARE_SIZE = WIDTH//COLS
 
 # rgb

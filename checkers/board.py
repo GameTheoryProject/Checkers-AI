@@ -5,7 +5,7 @@ from .piece import Piece
 class Board:
     def __init__(self):
         self.board = []
-        self.red_left = self.white_left = 12
+        self.red_left = self.white_left = (ROWS // 2 - 1) * (COLS // 2)
         self.red_kings = self.white_kings = 0
         self.create_board()
     
@@ -13,7 +13,7 @@ class Board:
         win.fill(BLACK)
         for row in range(ROWS):
             for col in range(row % 2, COLS, 2):
-                pygame.draw.rect(win, WHITE, (row*SQUARE_SIZE, col *SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+                pygame.draw.rect(win, WHITE, (col*SQUARE_SIZE, row*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
     def evaluate(self):
         return self.white_left - self.red_left + (self.white_kings * 0.5 - self.red_kings * 0.5)
@@ -45,9 +45,9 @@ class Board:
             self.board.append([])
             for col in range(COLS):
                 if col % 2 == ((row +  1) % 2):
-                    if row < 3:
+                    if row < ROWS // 2 - 1:
                         self.board[row].append(Piece(row, col, WHITE))
-                    elif row > 4:
+                    elif row > ROWS // 2:
                         self.board[row].append(Piece(row, col, RED))
                     else:
                         self.board[row].append(0)
