@@ -4,15 +4,15 @@ import pygame
 RED = (255,0,0)
 WHITE = (255, 255, 255)
 
-def minimax(position, depth, color, game, max_player = True):
+def minimax(position, depth, color, game, evaluate_mode = 3, max_player = True):
     if depth == 0 or position.winner() != None:
-        return position.evaluate(), position
+        return position.evaluate(color, evaluate_mode), position
     
     if max_player:
         maxEval = float('-inf')
         best_move = None
         for move in get_all_moves(position, color, game):
-            evaluation = minimax(move, depth-1, color, game, False)[0]
+            evaluation = minimax(move, depth-1, color, game, evaluate_mode, False)[0]
             maxEval = max(maxEval, evaluation)
             if maxEval == evaluation:
                 best_move = move
@@ -22,7 +22,7 @@ def minimax(position, depth, color, game, max_player = True):
         minEval = float('inf')
         best_move = None
         for move in get_all_moves(position, other_color(color), game):
-            evaluation = minimax(move, depth-1, color, game, True)[0]
+            evaluation = minimax(move, depth-1, color, game, evaluate_mode, True)[0]
             minEval = min(minEval, evaluation)
             if minEval == evaluation:
                 best_move = move
@@ -30,16 +30,16 @@ def minimax(position, depth, color, game, max_player = True):
         return minEval, best_move
 
 
-def alpha_beta_search(position, depth, color, game, a_b, max_player = True):
+def alpha_beta_search(position, depth, color, game, a_b, evaluate_mode = 3, max_player = True):
     # 当到达最后一层且此时可以分出胜负时
     if depth == 0 or position.winner() != None:
-        return position.evaluate(), position
+        return position.evaluate(color, evaluate_mode), position
 
     if max_player:
         maxEval = float('-inf')
         best_move = None
         for move in get_all_moves(position, color, game):
-            evaluation = alpha_beta_search(move, depth-1, color, game, a_b, False)[0]
+            evaluation = alpha_beta_search(move, depth-1, color, game, a_b, evaluate_mode, False)[0]
             maxEval = max(maxEval, evaluation)
             if maxEval == evaluation:
                 best_move = move
@@ -55,7 +55,7 @@ def alpha_beta_search(position, depth, color, game, a_b, max_player = True):
         minEval = float('inf')
         best_move = None
         for move in get_all_moves(position, other_color(color), game):
-            evaluation = alpha_beta_search(move, depth-1, color, game, a_b, True)[0]
+            evaluation = alpha_beta_search(move, depth-1, color, game, a_b, evaluate_mode, True)[0]
             minEval = min(minEval, evaluation)
             if minEval == evaluation:
                 best_move = move
@@ -67,10 +67,6 @@ def alpha_beta_search(position, depth, color, game, a_b, max_player = True):
                 break
 
         return minEval, best_move
-
-
-def mcts():
-    pass
 
 
 def simulate_move(piece, move, board, game, skip):
@@ -87,7 +83,7 @@ def get_all_moves(board, color, game):
     for piece in board.get_all_pieces(color):
         valid_moves = board.get_valid_moves(piece)
         for move, skip in valid_moves.items():
-            draw_moves(game, board, piece)
+            # draw_moves(game, board, piece)
             temp_board = deepcopy(board)
             temp_piece = temp_board.get_piece(piece.row, piece.col)
             new_board = simulate_move(temp_piece, move, temp_board, game, skip)

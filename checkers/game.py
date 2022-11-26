@@ -6,6 +6,8 @@ class Game:
     def __init__(self, win):
         self._init()
         self.win = win
+        self.step = 0
+        self.winner = None
     
     def update(self):
         self.board.draw(self.win)
@@ -18,8 +20,11 @@ class Game:
         self.turn = RED
         self.valid_moves = {}
 
-    def winner(self):
-        return self.board.winner()
+    def check_winner(self):
+        self.winner = self.board.winner(self.step)
+        # print(self.board.white_kings,self.board.white_left,self.board.red_kings,self.board.red_left)
+        # print("step:{:4d}, winner:{}".format(self.step, self.winner))
+        return self.step, self.winner
 
     def reset(self):
         self._init()
@@ -63,6 +68,8 @@ class Game:
             self.turn = WHITE
         else:
             self.turn = RED
+        self.step += 1
+        # self.check_winner()
 
     def get_board(self):
         return self.board
