@@ -16,7 +16,14 @@ class Board:
                 pygame.draw.rect(win, WHITE, (col*SQUARE_SIZE, row*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
     def evaluate(self):
-        return self.white_left - self.red_left + (self.white_kings * 0.5 - self.red_kings * 0.5)
+        # return self.white_left - self.red_left # 1
+        # return self.white_left - self.red_left + (self.white_kings * 0.1 - self.red_kings * 0.1) # 2
+        return self.white_left - self.red_left + (self.white_kings * 0.5 - self.red_kings * 0.5) # 3
+        # return self.white_left - self.red_left + (self.white_kings * 1 - self.red_kings * 1) # 4
+        # return self.heuristics() # 5
+
+    def heuristics(self):
+        pass
 
     def get_all_pieces(self, color):
         pieces = []
