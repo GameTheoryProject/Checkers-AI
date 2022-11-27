@@ -72,12 +72,12 @@ def run_game(WHITE_AI, WA_depth, WA_eval_mode, RED_AI, RA_depth, RA_eval_mode, f
 
         info1 = "step:{:5d}, turn:{}, time:{:.5f}".format(step, turn.ljust(5,' '), calc_time)
         all_infos.append(info1)
-        print(info1)
+        # print(info1)
         if winner != None:
             run = False
             info2 = "game over, winner:{}".format(winner.ljust(5,' '))
             all_infos.append(info2)
-            print(info2)
+            # print(info2)
             # input()
 
         # pygame.time.delay(1000)
