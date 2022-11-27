@@ -12,9 +12,9 @@ BLACK = (0, 0, 0)
 BLUE = (0, 0, 255)
 GREY = (128,128,128)
 
-MAX_STEP = 2 * (M-1) * N * 10
-WHITE_WIN = "white"
-RED_WIN = "red"
+MAX_STEP = 2 * (M-1) * N * 50
+WHITE_NAME = "white"
+RED_NAME = "red"
 DRAW = "draw"
 
 CROWN = pygame.transform.scale(pygame.image.load('assets/crown.png'), (44, 25))

@@ -1,13 +1,15 @@
 import pygame
-from .constants import BLACK, ROWS, COLS, WHITE, RED, SQUARE_SIZE, MAX_STEP, WHITE_WIN, RED_WIN, DRAW
+from .constants import BLACK, ROWS, COLS, WHITE, RED, SQUARE_SIZE, MAX_STEP, WHITE_NAME, RED_NAME, DRAW
 from .piece import Piece
 
 class Board:
-    def __init__(self):
+    def __init__(self, turn):
         self.board = []
         self.red_left = self.white_left = (ROWS // 2 - 1) * (COLS // 2)
         self.red_kings = self.white_kings = 0
         self.create_board()
+        self.step = 0
+        self.turn = turn
     
     def draw_squares(self, win):
         win.fill(BLACK)
@@ -146,23 +148,21 @@ class Board:
                     self.white_left -= 1
                     self.white_kings -= 1 if piece.king else 0  # FIXED BUG
     
-    def winner(self, step = 0):
+    def winner(self):
         # 某一方无子而结束
         if self.red_left * self.white_left <= 0:
-                return WHITE_WIN if self.red_left <= 0 else RED_WIN
+                return WHITE_NAME if self.red_left <= 0 else RED_NAME
         # 达到最大step而结束
-        elif step >= MAX_STEP:
+        elif self.step >= MAX_STEP:
             return DRAW if self.relative_score() == 0 else \
-                (WHITE_WIN if self.relative_score() > 0 else RED_WIN)
+                (WHITE_NAME if self.relative_score() > 0 else RED_NAME)
         # 当前执行方无法移动而结束
         else:
-            turn = WHITE if step % 2 else RED
-            valid_p = 0
-            pieces = self.get_all_pieces(turn)
+            pieces = self.get_all_pieces(self.turn)
             for p in pieces:
                 if len(self.get_valid_moves(p)) > 0:
                     return None
-            return RED_WIN if step % 2 else WHITE_WIN
+            return RED_NAME if self.turn == WHITE else WHITE_NAME
         assert False
 
     def relative_score(self):

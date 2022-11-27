@@ -1,14 +1,11 @@
 # Assets: https://techwithtim.net/wp-content/uploads/2020/09/assets.zip
+import copy
 import pygame
-from checkers.constants import WIDTH, HEIGHT, SQUARE_SIZE, RED, WHITE
+from checkers.constants import WHITE_NAME, WIDTH, HEIGHT, SQUARE_SIZE, RED, WHITE, RED_NAME
 from checkers.game import Game
 from minimax.algorithm import minimax, alpha_beta_search
-import threading
-
-FPS = 60
-
-WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('Checkers')
+import random
+import time
 
 def get_row_col_from_mouse(pos):
     x, y = pos
@@ -16,37 +13,42 @@ def get_row_col_from_mouse(pos):
     col = x // SQUARE_SIZE
     return row, col
 
-# TODO
-def win_thread():
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
+def sample_one(boards):
+    return random.sample(list(boards), 1)[0]
 
-def main():
+def AI_calc(game, color, AI, depth, eval_mode):
+    start = time.time()
+    if AI == "minimax":
+        value, new_boards = minimax(game.get_board(), depth, color,  game, evaluate_mode=eval_mode)
+    elif AI == "alpha_beta":
+        value, new_boards = alpha_beta_search(game.get_board(), depth, color,  game, [float('-inf'),float('inf')], evaluate_mode=eval_mode)
+    else:
+        assert False
+    calc_time = time.time()-start
+    return value, sample_one(new_boards), calc_time
+
+def run_game(WHITE_AI, WA_depth, WA_eval_mode, RED_AI, RA_depth, RA_eval_mode, first_strike = RED):
+    FPS = 60
+    WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption('Game Theory Project: Checkers-AI')
     run = True
     clock = pygame.time.Clock()
-    game = Game(WIN)
+    game = Game(WIN, first_strike)  # the first turn color
     game.update()
     
-    player_color = RED
-    human_player = True
-    AI_color = WHITE if player_color == RED else RED
-
-    # t1 = threading.Thread(target=win_thread)
-    # t1.start()
+    human_player = False
 
     while run:
         clock.tick(FPS)
+        turn = WHITE_NAME if game.turn == WHITE else RED_NAME
 
-        if game.turn == AI_color:
-            value, new_board = minimax(game.get_board(), 5, AI_color, game)
-            # value, new_board = alpha_beta_search(game.get_board(), 4, WHITE, game, [float('-inf'),float('inf')])
+        if game.turn == WHITE:
+            value, new_board, calc_time = AI_calc(game, WHITE, WHITE_AI, WA_depth, WA_eval_mode)
             game.ai_move(new_board)
 
-        elif game.turn == player_color:
+        elif game.turn == RED:
             if not human_player:
-                value, new_board = minimax(game.get_board(), 4, player_color, game)
+                value, new_board, calc_time = AI_calc(game, RED, RED_AI, RA_depth, RA_eval_mode)
                 game.ai_move(new_board)
             else:
                 while True:
@@ -64,25 +66,40 @@ def main():
 
         step, winner = game.check_winner()
         
-        # for event in pygame.event.get():
-        #     if event.type == pygame.QUIT:
-        #         run = False
-            
-        #     if event.type == pygame.MOUSEBUTTONDOWN:
-        #         pos = pygame.mouse.get_pos()
-        #         row, col = get_row_col_from_mouse(pos)
-        #         game.select(row, col)
-
         game.update()
 
-        print("step:{:4d}, winner:{}".format(step, winner))
-        # print(game.board.white_kings,game.board.white_left,game.board.red_kings,game.board.red_left)
+        print("step:{:5d}, turn:{}, time:{:.5f}".format(step, turn.ljust(5,' '), calc_time))
         if winner != None:
             run = False
-            input("game over")
+            print("game over, winner:{}".format(winner.ljust(5,' ')))
+            input()
 
         # pygame.time.delay(1000)
 
     pygame.quit()
 
-main()
+# run_game("minimax",4,3,"minimax",4,3,first_strike=RED)
+
+
+# 计算不同深度的算法每一步平均时间
+def t1():
+    depths = [1,2,3,4,5,6]
+    times_m = []    # minimax times
+    tims_a = []     # alpha_beta times
+
+    run_game("minimax",4,3,"alpha_beta",4,3,first_strike=RED)
+
+    pass
+
+# 计算不同深度的alpha_beta算法的胜率
+def t2():
+    pass
+
+# 计算使用不同eval函数的胜率，对手固定为(minimax,4,3)
+def t3():
+    pass
+
+if __name__ == '__main__':
+    t1()
+    t2()
+    t3()

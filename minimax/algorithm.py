@@ -1,4 +1,6 @@
 from copy import deepcopy
+import copy
+import random
 import pygame
 
 RED = (255,0,0)
@@ -11,23 +13,37 @@ def minimax(position, depth, color, game, evaluate_mode = 3, max_player = True):
     if max_player:
         maxEval = float('-inf')
         best_move = None
+        best_moves = []
         for move in get_all_moves(position, color, game):
             evaluation = minimax(move, depth-1, color, game, evaluate_mode, False)[0]
-            maxEval = max(maxEval, evaluation)
-            if maxEval == evaluation:
-                best_move = move
-        
-        return maxEval, best_move
+            if evaluation > maxEval:
+                best_moves = []
+                best_moves.append(move)
+                maxEval = evaluation
+            elif evaluation == maxEval:
+                best_moves.append(move)
+            else:
+                pass
+        # best_move = best_moves[random.randint(0, len(best_moves) - 1)] if len(best_moves) > 0 else None
+
+        return maxEval, best_moves
     else:
         minEval = float('inf')
         best_move = None
+        best_moves = []
         for move in get_all_moves(position, other_color(color), game):
             evaluation = minimax(move, depth-1, color, game, evaluate_mode, True)[0]
-            minEval = min(minEval, evaluation)
-            if minEval == evaluation:
-                best_move = move
+            if evaluation < minEval:
+                best_moves = []
+                best_moves.append(move)
+                minEval = evaluation
+            elif evaluation == minEval:
+                best_moves.append(move)
+            else:
+                pass
+        # best_move = best_moves[random.randint(0, len(best_moves) - 1)] if len(best_moves) > 0 else None
         
-        return minEval, best_move
+        return minEval, best_moves
 
 
 def alpha_beta_search(position, depth, color, game, a_b, evaluate_mode = 3, max_player = True):
@@ -38,35 +54,49 @@ def alpha_beta_search(position, depth, color, game, a_b, evaluate_mode = 3, max_
     if max_player:
         maxEval = float('-inf')
         best_move = None
+        best_moves = []
         for move in get_all_moves(position, color, game):
-            evaluation = alpha_beta_search(move, depth-1, color, game, a_b, evaluate_mode, False)[0]
-            maxEval = max(maxEval, evaluation)
-            if maxEval == evaluation:
-                best_move = move
+            evaluation = alpha_beta_search(move, depth-1, color, game, copy.deepcopy(a_b), evaluate_mode, False)[0]
+            if evaluation > maxEval:
+                best_moves = []
+                best_moves.append(move)
+                maxEval = evaluation
+            elif evaluation == maxEval:
+                best_moves.append(move)
+            else:
+                pass
+            
             # alpha-beta 剪枝
-            if maxEval >= a_b[0] and maxEval <= a_b[1]:
-                a_b[0] = maxEval
-            elif maxEval > a_b[1]:
+            a_b[0] = max(a_b[0], maxEval)
+            if a_b[1] < a_b[0]:
                 # print("Pruning!")
                 break
+        # best_move = best_moves[random.randint(0, len(best_moves) - 1)] if len(best_moves) > 0 else None
 
-        return maxEval, best_move
+        return maxEval, best_moves
     else:
         minEval = float('inf')
         best_move = None
+        best_moves = []
         for move in get_all_moves(position, other_color(color), game):
-            evaluation = alpha_beta_search(move, depth-1, color, game, a_b, evaluate_mode, True)[0]
-            minEval = min(minEval, evaluation)
-            if minEval == evaluation:
-                best_move = move
+            evaluation = alpha_beta_search(move, depth-1, color, game, copy.deepcopy(a_b), evaluate_mode, True)[0]
+            if evaluation < minEval:
+                best_moves = []
+                best_moves.append(move)
+                minEval = evaluation
+            elif evaluation == minEval:
+                best_moves.append(move)
+            else:
+                pass
+
             # alpha-beta 剪枝
-            if minEval >= a_b[0] and minEval <= a_b[1]:
-                a_b[1] = minEval
-            elif minEval < a_b[0]:
+            a_b[1] = min(a_b[1], minEval)
+            if a_b[1] < a_b[0]:
                 # print("Pruning!")
                 break
-
-        return minEval, best_move
+        # best_move = best_moves[random.randint(0, len(best_moves) - 1)] if len(best_moves) > 0 else None
+        
+        return minEval, best_moves
 
 
 def simulate_move(piece, move, board, game, skip):

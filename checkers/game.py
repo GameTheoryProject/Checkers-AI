@@ -3,8 +3,8 @@ from .constants import RED, WHITE, BLUE, SQUARE_SIZE
 from checkers.board import Board
 
 class Game:
-    def __init__(self, win):
-        self._init()
+    def __init__(self, win, turn):
+        self._init(turn)
         self.win = win
         self.step = 0
         self.winner = None
@@ -14,14 +14,14 @@ class Game:
         self.draw_valid_moves(self.valid_moves)
         pygame.display.update()
 
-    def _init(self):
+    def _init(self, turn):
         self.selected = None
-        self.board = Board()
-        self.turn = RED
+        self.turn = turn
+        self.board = Board(self.turn)
         self.valid_moves = {}
 
     def check_winner(self):
-        self.winner = self.board.winner(self.step)
+        self.winner = self.board.winner()
         # print(self.board.white_kings,self.board.white_left,self.board.red_kings,self.board.red_left)
         # print("step:{:4d}, winner:{}".format(self.step, self.winner))
         return self.step, self.winner
@@ -68,7 +68,9 @@ class Game:
             self.turn = WHITE
         else:
             self.turn = RED
+        self.board.turn = self.turn
         self.step += 1
+        self.board.step += 1
         # self.check_winner()
 
     def get_board(self):
