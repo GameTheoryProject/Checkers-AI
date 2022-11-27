@@ -35,6 +35,8 @@ def run_game(WHITE_AI, WA_depth, WA_eval_mode, RED_AI, RA_depth, RA_eval_mode, f
     clock = pygame.time.Clock()
     game = Game(WIN, first_strike)  # the first turn color
     game.update()
+
+    all_infos = []
     
     human_player = False
 
@@ -68,38 +70,24 @@ def run_game(WHITE_AI, WA_depth, WA_eval_mode, RED_AI, RA_depth, RA_eval_mode, f
         
         game.update()
 
-        print("step:{:5d}, turn:{}, time:{:.5f}".format(step, turn.ljust(5,' '), calc_time))
+        info1 = "step:{:5d}, turn:{}, time:{:.5f}".format(step, turn.ljust(5,' '), calc_time)
+        all_infos.append(info1)
+        print(info1)
         if winner != None:
             run = False
-            print("game over, winner:{}".format(winner.ljust(5,' ')))
-            input()
+            info2 = "game over, winner:{}".format(winner.ljust(5,' '))
+            all_infos.append(info2)
+            print(info2)
+            # input()
 
         # pygame.time.delay(1000)
 
     pygame.quit()
 
-# run_game("minimax",4,3,"minimax",4,3,first_strike=RED)
+    return all_infos
 
-
-# 计算不同深度的算法每一步平均时间
-def t1():
-    depths = [1,2,3,4,5,6]
-    times_m = []    # minimax times
-    tims_a = []     # alpha_beta times
-
-    run_game("minimax",4,3,"alpha_beta",4,3,first_strike=RED)
-
-    pass
-
-# 计算不同深度的alpha_beta算法的胜率
-def t2():
-    pass
-
-# 计算使用不同eval函数的胜率，对手固定为(minimax,4,3)
-def t3():
-    pass
+# x = run_game("minimax",4,3,"minimax",4,3,first_strike=RED)
+# print(x)
 
 if __name__ == '__main__':
-    t1()
-    t2()
-    t3()
+    pass
