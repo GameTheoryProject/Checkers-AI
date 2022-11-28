@@ -10,9 +10,10 @@ class Game:
         self.winner = None
     
     def update(self):
-        self.board.draw(self.win)
-        self.draw_valid_moves(self.valid_moves)
-        pygame.display.update()
+        if self.win:
+            self.board.draw(self.win)
+            self.draw_valid_moves(self.valid_moves)
+            pygame.display.update()
 
     def _init(self, turn):
         self.selected = None

@@ -27,21 +27,24 @@ def AI_calc(game, color, AI, depth, eval_mode):
     calc_time = time.time()-start
     return value, sample_one(new_boards), calc_time
 
-def run_game(WHITE_AI, WA_depth, WA_eval_mode, RED_AI, RA_depth, RA_eval_mode, first_strike = RED):
-    FPS = 60
-    WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption('Game Theory Project: Checkers-AI')
-    run = True
-    clock = pygame.time.Clock()
-    game = Game(WIN, first_strike)  # the first turn color
-    game.update()
-
-    all_infos = []
+def run_game(WHITE_AI, WA_depth, WA_eval_mode, RED_AI, RA_depth, RA_eval_mode, first_strike = RED, visual = True, exp1 = False):
+    if visual:
+        FPS = 60
+        WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+        pygame.display.set_caption('Game Theory Project: Checkers-AI')
+        clock = pygame.time.Clock()
+        game = Game(WIN, first_strike)  # the first turn color
+    else:
+        game = Game(None, first_strike)
     
+    game.update()
+    run = True
+    all_infos = []
     human_player = False
 
     while run:
-        clock.tick(FPS)
+        if visual:
+            clock.tick(FPS)
         turn = WHITE_NAME if game.turn == WHITE else RED_NAME
 
         if game.turn == WHITE:
@@ -53,6 +56,7 @@ def run_game(WHITE_AI, WA_depth, WA_eval_mode, RED_AI, RA_depth, RA_eval_mode, f
                 value, new_board, calc_time = AI_calc(game, RED, RED_AI, RA_depth, RA_eval_mode)
                 game.ai_move(new_board)
             else:
+                if not visual: assert False
                 while True:
                     out = False
                     for event in pygame.event.get():
@@ -80,9 +84,18 @@ def run_game(WHITE_AI, WA_depth, WA_eval_mode, RED_AI, RA_depth, RA_eval_mode, f
             # print(info2)
             # input()
 
+        # enable for exp1, for saving time
+        # ---------------------------------------------
+        if exp1 and game.step >= 100:
+            run = False
+            info2 = "stop running"
+            all_infos.append(info2)
+        # ---------------------------------------------
+
         # pygame.time.delay(1000)
 
-    pygame.quit()
+    if visual:
+        pygame.quit()
 
     return all_infos
 
