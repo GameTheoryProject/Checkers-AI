@@ -68,7 +68,7 @@ def t3():
         for j in range(len(white_mode)):
             for e in range(repeat_time):
                 print('generating: red_mode:{:2d}, white_mode:{:2d}, repeat:{:3d}'.format(red_mode[i],white_mode[j],e), flush=True)
-                infos = run_game("minimax",4,white_mode[j],"minimax",4,red_mode[i],first_strike=RED)
+                infos = run_game("minimax",3,white_mode[j],"minimax",3,red_mode[i],first_strike=RED,visual=False)
                 red_win[i][j] += 1 if tools.get_winner(infos) == RED_NAME else 0
 
             red_win[i][j] /= repeat_time
@@ -78,7 +78,7 @@ def t3():
             f.write(str(i)+'\n')
     pass
 
-t1()
+# t1()
 
 # t2()
 

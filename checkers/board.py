@@ -33,17 +33,6 @@ class Board:
         return value if color == WHITE else -value
 
     def heuristics(self, color):
-        """
-        This is the heuristics function. This function calculates these metrics:
-            a. Normalized utility values from the number of pawn and king pieces 
-                on the board. [0.32, -0.32]
-            b. Normalized utility values from the number of captures could be made 
-                by kings and pawns. [0.96, -0.96]
-            c. Normalized utility values from the distances of pawns to become
-                kings. [0.70, -0.70]
-            d. Normalized utility values from the number of pieces on the safer
-                places on the board. [0.19, -0.19]
-        """
         wp, rp = 0, 0           # white pawns, red pawns
         wk, rk = 0, 0           # white kings, red kings
         wc, rc = 0, 0           # white captures, red captures
@@ -72,22 +61,19 @@ class Board:
                             rp += 1
                             rkd += ROWS - (row + 1)
                             rsd += d
+        w1, w2, w3, w4 = 3., 2., 1., 1.
         if color == WHITE:
-            white_count_heuristics = \
-                    3.125 * (((wp + wk * 2.0) - (rp + rk * 2.0)) \
-                        / 1.0 + ((wp + wk * 2.0) + (rp + rk * 2.0)))
-            white_capture_heuristics = 1.0417 * ((wc - rc)/(1.0 + wc + rc))
-            white_kingdist_heuristics = 1.429 * ((wkd - rkd)/(1.0 + wkd + rkd))
-            white_safe_heuristics = 5.263 * ((wsd - rsd)/(1.0 + wsd + rsd))
+            white_count_heuristics = w1 * (((wp + wk * 2.0) - (rp + rk * 2.0)) / 1.0 + ((wp + wk * 2.0) + (rp + rk * 2.0)))
+            white_capture_heuristics = w2 * ((wc - rc)/(1.0 + wc + rc))
+            white_kingdist_heuristics = w3 * ((wkd - rkd)/(1.0 + wkd + rkd))
+            white_safe_heuristics = w4 * ((wsd - rsd)/(1.0 + wsd + rsd))
             return white_count_heuristics + white_capture_heuristics \
                         + white_kingdist_heuristics + white_safe_heuristics
         else:
-            red_count_heuristics = \
-                    3.125 * (((rp + rk * 2.0) - (wp + wk * 2.0)) \
-                        / 1.0 + ((wp + wk * 2.0) + (rp + rk * 2.0)))
-            red_capture_heuristics = 1.0416 * ((rc - wc)/(1.0 + wc + rc))
-            red_kingdist_heuristics = 1.428 * ((rkd - wkd)/(1.0 + wkd + rkd))
-            red_safe_heuristics = 5.263 * ((rsd - wsd)/(1.0 + wsd + rsd))
+            red_count_heuristics = w1 * (((rp + rk * 2.0) - (wp + wk * 2.0)) / 1.0 + ((wp + wk * 2.0) + (rp + rk * 2.0)))
+            red_capture_heuristics = w2 * ((rc - wc)/(1.0 + wc + rc))
+            red_kingdist_heuristics = w3 * ((rkd - wkd)/(1.0 + wkd + rkd))
+            red_safe_heuristics = w4 * ((rsd - wsd)/(1.0 + wsd + rsd))
             return red_count_heuristics + red_capture_heuristics \
                         + red_kingdist_heuristics + red_safe_heuristics
 
