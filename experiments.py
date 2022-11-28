@@ -35,7 +35,7 @@ def t1():
         f.write(str(ab_avg_time)+'\n')
     pass
 
-# 计算不同深度的alpha_beta算法的胜率
+# 计算不同深度的算法的胜率
 def t2():
     repeat_time = 10
     red_depths = [1,2,3,4]
@@ -78,8 +78,8 @@ def t3():
             f.write(str(i)+'\n')
     pass
 
+t1()
+
 # t2()
 
 # t3()
-
-t1()

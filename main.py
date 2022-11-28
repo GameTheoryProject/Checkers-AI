@@ -86,7 +86,7 @@ def run_game(WHITE_AI, WA_depth, WA_eval_mode, RED_AI, RA_depth, RA_eval_mode, f
 
         # enable for exp1, for saving time
         # ---------------------------------------------
-        if exp1 and game.step >= 100:
+        if exp1 and game.step >= 20:
             run = False
             info2 = "stop running"
             all_infos.append(info2)
